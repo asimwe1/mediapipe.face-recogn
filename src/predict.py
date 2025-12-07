@@ -1,16 +1,18 @@
 import cv2
 import mediapipe as mp
-import os
+import json
 
-name = input("Enter your name: ").strip()
+# Load model
+recognizer = cv2.face.LBPHFaceRecognizer_create()
+recognizer.read("models/lbph_model.xml")
 
-save_dir = f"dataset/{name}"
-os.makedirs(save_dir, exist_ok=True)
+# Load label map
+with open("models/label_map.json", "r") as f:
+    label_map = json.load(f)
 
 mp_face = mp.solutions.face_mesh
 
 cap = cv2.VideoCapture(0)
-count = 0
 
 with mp_face.FaceMesh(
         max_num_faces=1,
@@ -34,22 +36,29 @@ with mp_face.FaceMesh(
                 x_min, x_max = min(xs), max(xs)
                 y_min, y_max = min(ys), max(ys)
 
-                # Draw rectangle
                 cv2.rectangle(frame, (x_min, y_min), (x_max, y_max),
                               (0, 255, 0), 2)
 
-                # Crop & save
+                # Prepare face for prediction
                 face_crop = frame[y_min:y_max, x_min:x_max]
-                if face_crop.size > 0:
-                    cv2.imwrite(f"{save_dir}/{count}.jpg", face_crop)
-                    count += 1
+                gray = cv2.cvtColor(face_crop, cv2.COLOR_BGR2GRAY)
 
-        cv2.imshow("Capturing Faces", frame)
+                try:
+                    label_id, confidence = recognizer.predict(gray)
+                    name = label_map[str(label_id)]
+
+                    text = f"{name} ({int(confidence)})"
+                except:
+                    text = "Unknown"
+
+                cv2.putText(frame, text, (x_min, y_min - 10),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.8,
+                            (0, 255, 0), 2)
+
+        cv2.imshow("Face Recognition", frame)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
 cap.release()
 cv2.destroyAllWindows()
-
-print(f"Saved {count} images to {save_dir}")
