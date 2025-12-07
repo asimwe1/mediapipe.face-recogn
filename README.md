@@ -23,56 +23,65 @@ project/
 
 ## Installation
 
-Install required dependencies:
+### Quick Setup (Linux/Mac)
+
+Run the automated setup script:
 
 ```bash
-pip install opencv-python mediapipe
-pip install opencv-contrib-python
+chmod +x setup.sh
+./setup.sh
+source venv/bin/activate
+```
+
+### Manual Setup
+
+1. Create a virtual environment:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+2. Install dependencies:
+
+```bash
+pip install -r requirements.txt
 ```
 
 The `opencv-contrib-python` package is required for LBPH algorithm support.
 
 ## Usage
 
-### Step 1: Capture Face Images
+### Running the Application
 
-Run the capture script:
-
-```bash
-python capture.py
-```
-
-When prompted, enter the person's name. Position the face in front of the camera and press Q to stop capturing. Images are automatically saved to `dataset/<name>/`.
-
-### Step 2: Train the Model
-
-Train the LBPH model with collected face data:
+Start the main application:
 
 ```bash
-python train.py
+python main.py
 ```
 
-This generates two files:
+This launches an interactive menu with the following options:
 
-- `models/lbph_model.xml` - Trained model weights
-- `models/label_map.json` - Mapping of labels to names
+1. **Capture Face Images** - Collect face samples for training
+2. **Train Model** - Train the LBPH recognizer on captured data
+3. **Run Face Recognition** - Perform real-time face recognition
+4. **View Dataset Info** - Display statistics about captured data
+5. **Exit** - Close the application
 
-### Step 3: Run Face Recognition
+### Workflow
 
-Start face recognition on live video:
+1. **Capture**: Enter a person's name and capture face images (press Q to stop)
+2. **Train**: Train the model on all captured images
+3. **Recognize**: Run real-time face recognition (press Q to stop)
+
+The system supports multiple people. Repeat the capture-train cycle to add new identities or improve accuracy.
+
+### Standalone Module Usage
+
+Each module can also be run independently:
 
 ```bash
-python predict.py
+python -m src.capture   # Capture faces
+python -m src.train     # Train model
+python -m src.predict   # Run recognition
 ```
-
-The camera feed displays:
-
-- Green rectangle around detected faces
-- Predicted person name
-- LBPH confidence score
-
-Press Q to exit.
-
-## Workflow
-
-The system supports multiple people. Repeat the capture-train-predict cycle as needed to add new identities or improve recognition accuracy.
