@@ -3,6 +3,8 @@
 import os
 import json
 from typing import Dict, List, Tuple
+import cv2
+import numpy as np
 
 
 def get_dataset_stats() -> Dict[str, int]:
@@ -94,3 +96,40 @@ def validate_environment() -> Tuple[bool, List[str]]:
         pass
     
     return len(errors) == 0, errors
+
+
+def load_dataset(dataset_dir: str) -> Tuple[List[np.ndarray], List[int], Dict[int, str]]:
+    """Load dataset images and labels"""
+    images = []
+    labels = []
+    label_map = {}
+    current_label = 0
+
+    for person in os.listdir(dataset_dir):
+        person_path = os.path.join(dataset_dir, person)
+        if not os.path.isdir(person_path):
+            continue
+
+        label_map[current_label] = person
+
+        for img_name in os.listdir(person_path):
+            img_path = os.path.join(person_path, img_name)
+            img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
+
+            if img is None:
+                continue
+
+            images.append(img)
+            labels.append(current_label)
+
+        current_label += 1
+
+    return images, labels, label_map
+
+
+def save_model(recognizer, label_map: Dict[int, str], model_dir: str):
+    """Save the trained model and label map"""
+    os.makedirs(model_dir, exist_ok=True)
+    recognizer.save(f"{model_dir}/lbph_model.xml")
+    with open(f"{model_dir}/label_map.json", "w") as f:
+        json.dump(label_map, f)
