@@ -1,4 +1,16 @@
-"""Utility functions for face recognition pipeline"""
+"""
+utils.py
+
+This module contains utility functions for the face recognition pipeline. These functions handle tasks such as:
+- Validating the environment for required dependencies.
+- Loading datasets for training.
+- Saving trained models and label mappings.
+
+Functions:
+- validate_environment: Checks if all required dependencies are installed.
+- load_dataset: Loads images and labels from the dataset directory.
+- save_model: Saves the trained model and label map to the specified directory.
+"""
 
 import os
 import json

@@ -1,3 +1,12 @@
+"""
+predict.py
+
+This module handles real-time face recognition using the trained LBPH model and MediaPipe for face detection.
+
+Functions:
+- run_prediction: Loads the trained model and label map, captures video from the webcam, and performs real-time face recognition.
+"""
+
 import cv2
 import mediapipe as mp
 import json

@@ -1,3 +1,12 @@
+"""
+capture.py
+
+This module handles the capture of face images from the webcam. The captured images are saved to the dataset directory.
+
+Functions:
+- run_capture: Captures face images, processes them using MediaPipe, and saves them to the dataset.
+"""
+
 import cv2
 import mediapipe as mp
 import os

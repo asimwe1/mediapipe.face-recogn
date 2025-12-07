@@ -1,7 +1,17 @@
+"""
+train.py
+
+This module handles the training of the LBPH (Local Binary Patterns Histograms) model using the captured face images.
+
+Functions:
+- run_training: Loads the dataset, trains the LBPH model, and saves the model and label map.
+"""
+
 import cv2
 import os
 import json
 import numpy as np
+from src.utils import load_dataset, save_model
 
 def run_training():
     """Train LBPH model on captured face images"""
