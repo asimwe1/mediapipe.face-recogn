@@ -65,6 +65,7 @@ def run_capture():
             cv2.imshow("Capturing Faces", frame)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
+                print("Capturing process terminated by user.")
                 break
 
     cap.release()

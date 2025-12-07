@@ -7,12 +7,12 @@ def run_training():
     """Train LBPH model on captured face images"""
     DATASET_DIR = "dataset"
     MODEL_DIR = "models"
-    
+
     if not os.path.exists(DATASET_DIR):
         print(f"Error: Dataset directory '{DATASET_DIR}' not found")
         print("Please capture face images first (Option 1)")
         return
-    
+
     os.makedirs(MODEL_DIR, exist_ok=True)
 
     images = []
@@ -70,4 +70,10 @@ def run_training():
     print(f"  - Label map saved to: {MODEL_DIR}/label_map.json")
 
 if __name__ == "__main__":
-    run_training()
+    print("Press 'q' to quit training at any time.")
+    while True:
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord('q'):
+            print("Training process terminated by user.")
+            break
+        run_training()

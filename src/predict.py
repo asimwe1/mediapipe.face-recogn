@@ -87,11 +87,11 @@ def run_prediction():
             cv2.imshow("Face Recognition", frame)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
+                print("Face recognition stopped by user.")
                 break
 
     cap.release()
     cv2.destroyAllWindows()
-    print("\nFace recognition stopped")
 
 if __name__ == "__main__":
     run_prediction()
