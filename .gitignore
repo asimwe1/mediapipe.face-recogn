@@ -19,6 +19,7 @@ build/
 # Project specific
 dataset/
 models/
+recogn/
 *.xml
 *.json
 

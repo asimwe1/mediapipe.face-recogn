@@ -40,9 +40,13 @@ def run_prediction():
         if not cap.isOpened():
             raise RuntimeError("Could not access the camera. Ensure it is connected and not in use by another application.")
 
+        # Ensure the 'recogn' directory exists
+        output_dir = 'recogn'
+        os.makedirs(output_dir, exist_ok=True)
+
         # Define video writer
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        out = cv2.VideoWriter('face_recognition_output.mp4', fourcc, 20.0, (int(cap.get(3)), int(cap.get(4))))
+        out = cv2.VideoWriter(f'{output_dir}/face_recognition_output.mp4', fourcc, 20.0, (int(cap.get(3)), int(cap.get(4))))
 
         print("\nStarting face recognition... Press 'Q' to stop")
 
@@ -107,7 +111,7 @@ def run_prediction():
         out.release()
         cv2.destroyAllWindows()
 
-        print("\nVideo saved as 'face_recognition_output.mp4'")
+        print("\nVideo saved as 'recogn/face_recognition_output.mp4'")
 
     except FileNotFoundError as fnf_error:
         print(f"File error: {fnf_error}")
