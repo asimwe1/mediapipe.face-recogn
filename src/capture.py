@@ -13,6 +13,10 @@ def run_capture():
     save_dir = f"dataset/{name}"
     os.makedirs(save_dir, exist_ok=True)
 
+    # Count existing images in the dataset directory
+    existing_images = len([f for f in os.listdir(save_dir) if f.endswith(('.jpg', '.jpeg', '.png'))])
+    count = existing_images
+
     mp_face = mp.solutions.face_mesh
 
     cap = cv2.VideoCapture(0)
@@ -20,8 +24,6 @@ def run_capture():
     if not cap.isOpened():
         print("Error: Could not access camera")
         return
-    
-    count = 0
 
     with mp_face.FaceMesh(
             max_num_faces=1,
@@ -71,7 +73,7 @@ def run_capture():
     cap.release()
     cv2.destroyAllWindows()
 
-    print(f"\nSaved {count} images to {save_dir}")
+    print(f"\nSaved {count - existing_images} new images to {save_dir}")
 
 if __name__ == "__main__":
     run_capture()
