@@ -4,7 +4,7 @@ predict.py
 This module handles real-time face recognition using the trained LBPH model and MediaPipe for face detection.
 
 Functions:
-- run_prediction: Loads the trained model and label map, captures video from the webcam, and performs real-time face recognition.
+- run_prediction: Loads the trained model and label map, captures video from the webcam, and performs real-time face recognition. The session is recorded and saved as an MP4 file when terminated.
 """
 
 import cv2
@@ -13,7 +13,7 @@ import json
 import os
 
 def run_prediction():
-    """Run real-time face recognition"""
+    """Run real-time face recognition and record the session."""
     MODEL_PATH = "models/lbph_model.xml"
     LABEL_MAP_PATH = "models/label_map.json"
 
@@ -39,6 +39,10 @@ def run_prediction():
 
         if not cap.isOpened():
             raise RuntimeError("Could not access the camera. Ensure it is connected and not in use by another application.")
+
+        # Define video writer
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out = cv2.VideoWriter('face_recognition_output.mp4', fourcc, 20.0, (int(cap.get(3)), int(cap.get(4))))
 
         print("\nStarting face recognition... Press 'Q' to stop")
 
@@ -90,6 +94,9 @@ def run_prediction():
                                         cv2.FONT_HERSHEY_SIMPLEX, 0.8,
                                         (0, 255, 0), 2)
 
+                # Write the frame to the video file
+                out.write(frame)
+
                 cv2.imshow("Face Recognition", frame)
 
                 if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -97,7 +104,10 @@ def run_prediction():
                     break
 
         cap.release()
+        out.release()
         cv2.destroyAllWindows()
+
+        print("\nVideo saved as 'face_recognition_output.mp4'")
 
     except FileNotFoundError as fnf_error:
         print(f"File error: {fnf_error}")
