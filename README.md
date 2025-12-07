@@ -15,10 +15,19 @@ This approach satisfies the "AI Without ML" assignment requirement by using trad
 
 ```
 project/
-├── capture.py       # Collects and stores face samples
-├── train.py         # Trains the LBPH model
-├── predict.py       # Performs face recognition on video input
-└── dataset/         # Directory containing captured face images
+├── main.py              # Main application entry point
+├── src/
+│   ├── capture.py       # Face image capture module
+│   ├── train.py         # Model training module
+│   ├── predict.py       # Face recognition module
+│   └── utils.py         # Utility functions
+├── tests/               # Test suite
+├── dataset/             # Captured face images (generated)
+├── models/              # Trained models (generated)
+├── requirements.txt     # Python dependencies
+├── Dockerfile           # Docker container definition
+├── docker-compose.yml   # Docker Compose configuration
+└── Makefile            # Build automation
 ```
 
 ## Installation
@@ -85,3 +94,61 @@ python -m src.capture   # Capture faces
 python -m src.train     # Train model
 python -m src.predict   # Run recognition
 ```
+
+## Docker Deployment
+
+### Quick Start with Docker
+
+Using the automated script:
+
+```bash
+chmod +x docker-run.sh
+./docker-run.sh
+```
+
+### Using Docker Compose
+
+```bash
+# Start the application
+xhost +local:docker
+docker-compose up
+
+# Stop the application
+docker-compose down
+xhost -local:docker
+```
+
+### Manual Docker Commands
+
+```bash
+# Build image
+docker build -t face-recognition:latest .
+
+# Run container with camera and GUI access
+docker run -it --rm \
+    --device=/dev/video0:/dev/video0 \
+    -e DISPLAY=$DISPLAY \
+    -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
+    -v $(pwd)/dataset:/app/dataset \
+    -v $(pwd)/models:/app/models \
+    --privileged \
+    face-recognition:latest
+```
+
+### Using Makefile
+
+```bash
+make help           # Show all available commands
+make setup          # Setup local environment
+make run            # Run locally
+make build          # Build Docker image
+make docker-run     # Run in Docker
+make clean          # Clean up
+```
+
+## Requirements
+
+- Python 3.11+
+- Webcam/Camera device
+- X11 display server (for GUI on Linux)
+- Docker (optional, for containerized deployment)
